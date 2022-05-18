@@ -100,7 +100,7 @@ class SiteImport:
             if ts != production[i]["date"] or ts != consumption[i]["date"] or ts != self_consumption[i]["date"] or ts != \
                     feed_in[i]["date"]:
                 raise Exception("Unexpected API response format")
-            ts = datetime.datetime.strptime(ts, dtFormat).replace(tzinfo=self.__timezone)
+            ts = self.__timezone.localize(datetime.datetime.strptime(ts, dtFormat))
             purchased_i = purchased[i]["value"] if "value" in purchased[i] else None
             production_i = production[i]["value"] if "value" in production[i] else None
             self_consumption_i = self_consumption[i]["value"] if "value" in self_consumption else None
