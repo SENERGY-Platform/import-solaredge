@@ -52,12 +52,13 @@ class SiteImport:
             start_time_f = (datetime.datetime.now() - datetime.timedelta(days=30)).astimezone(self.__timezone).strftime(
                 dtFormat)
         else:
-            start_time_f = self.__last_dt.strftime(dtFormat)
+            start_time_f = (self.__last_dt + datetime.timedelta(minutes=1)).strftime(dtFormat)
         end_time = datetime.datetime.now()
         end_time_f = end_time.astimezone(self.__timezone).strftime(dtFormat)
 
         try:
-            resp = requests.get(f"{baseUrl}{self.__site}/{self.__mode}Details.json?startTime={start_time_f}&endTime={end_time_f}&api_key={self.__api_key}&timeUnit=QUARTER_OF_AN_HOUR")
+            resp = requests.get(
+                f"{baseUrl}{self.__site}/{self.__mode}Details.json?startTime={start_time_f}&endTime={end_time_f}&api_key={self.__api_key}&timeUnit=QUARTER_OF_AN_HOUR")
             if not resp.ok:
                 raise Exception("Request got unexpected status code " + str(resp.status_code))
             resp = resp.json()
@@ -107,8 +108,13 @@ class SiteImport:
             feed_in_i = feed_in[i]["value"] if "value" in feed_in[i] else None
             consumption_i = consumption[i]["value"] if "value" in consumption[i] else None
 
-            resp.append((ts, Point.get_message(purchased=purchased_i, production=production_i,
-                                               self_consumption=self_consumption_i,
-                                               feed_in=feed_in_i, consumption=consumption_i, site=self.__site)))
+            if purchased_i is not None \
+                    or production_i is not None \
+                    or self_consumption_i is not None \
+                    or feed_in_i is not None \
+                    or consumption_i is not None:
+                resp.append((ts, Point.get_message(purchased=purchased_i, production=production_i,
+                                                   self_consumption=self_consumption_i,
+                                                   feed_in=feed_in_i, consumption=consumption_i, site=self.__site)))
 
         return resp
