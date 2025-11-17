@@ -48,9 +48,9 @@ class SiteImport:
         self.__scheduler.enter(0, 1, self.__import)
 
     def __import(self):
-        if self.__last_dt is None:
-            start_time_f = (datetime.datetime.now() - datetime.timedelta(days=30)).astimezone(self.__timezone).strftime(
-                dtFormat)
+        delta = (datetime.datetime.now() - datetime.timedelta(days=30))
+        if self.__last_dt is None or self.__last_dt < delta:
+            start_time_f = delta.astimezone(self.__timezone).strftime(dtFormat)
         else:
             start_time_f = (self.__last_dt + datetime.timedelta(minutes=1)).strftime(dtFormat)
         end_time = datetime.datetime.now()
