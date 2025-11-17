@@ -60,7 +60,10 @@ class SiteImport:
             resp = requests.get(
                 f"{baseUrl}{self.__site}/{self.__mode}Details.json?startTime={start_time_f}&endTime={end_time_f}&api_key={self.__api_key}&timeUnit=QUARTER_OF_AN_HOUR")
             if not resp.ok:
-                raise Exception("Request got unexpected status code " + str(resp.status_code))
+                text = ""
+                if resp.content:
+                    text = resp.text
+                raise Exception(f"Request got unexpected status code {resp.status_code}: {resp.reason} {text}")
             resp = resp.json()
             points = self.__extract(resp)
             for dt, val in points:
