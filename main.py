@@ -20,7 +20,7 @@ from import_lib.import_lib import ImportLib, get_logger
 from lib.site.SiteImport import SiteImport
 
 if __name__ == '__main__':
-    lib = ImportLib()
+    lib = ImportLib("github.com/SENERGY-Platform/import-solaredge")
     logger = get_logger(__name__)
 
     scheduler = sched.scheduler(timefunc=time.time)
