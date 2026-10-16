@@ -1,4 +1,4 @@
-git+https://github.com/SENERGY-Platform/import-lib.git@0.3.0
+git+https://github.com/SENERGY-Platform/import-lib.git@0.3.1
 requests
 pytz
 rfc3339
