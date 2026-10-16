@@ -15,6 +15,7 @@ import datetime
 import os
 import sched
 import typing
+import urllib.parse
 
 import requests
 
@@ -72,10 +73,18 @@ class SiteImport:
             self.__last_dt = points[len(points) - 1][0]
 
         except Exception as e:
-            logger.error(f"Could not get data {e}")
+            logger.error(f"Could not get data {self.__redact(str(e))}")
             return
         finally:
             self.__scheduler.enter(self.__delay, 1, self.__import)
+
+    def __redact(self, text: str) -> str:
+        # requests puts the full request URL, including the api_key query parameter, into connection error messages.
+        if not self.__api_key:
+            return text
+        for secret in (self.__api_key, urllib.parse.quote(self.__api_key, safe="")):
+            text = text.replace(secret, "<redacted>")
+        return text
 
     def __extract(self, raw: typing.Dict) -> typing.List[typing.Tuple[datetime.datetime, typing.Dict]]:
         resp = []
