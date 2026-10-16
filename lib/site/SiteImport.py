@@ -116,7 +116,7 @@ class SiteImport:
             ts = self.__timezone.localize(datetime.datetime.strptime(ts, dtFormat))
             purchased_i = purchased[i]["value"] if "value" in purchased[i] else None
             production_i = production[i]["value"] if "value" in production[i] else None
-            self_consumption_i = self_consumption[i]["value"] if "value" in self_consumption else None
+            self_consumption_i = self_consumption[i]["value"] if "value" in self_consumption[i] else None
             feed_in_i = feed_in[i]["value"] if "value" in feed_in[i] else None
             consumption_i = consumption[i]["value"] if "value" in consumption[i] else None
 
